@@ -15,7 +15,7 @@ setup(
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
-    url='http://github.com/botswana-harvard/edc-reports',
+    url='http://github.com/clinicedc/edc-reports',
     license='GPL licence, see LICENCE',
     description='Report classes using reportlab',
     long_description=README,
