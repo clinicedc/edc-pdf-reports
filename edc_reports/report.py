@@ -50,7 +50,8 @@ class Report:
             styles.add(ParagraphStyle(
                 name='line_data_largest', alignment=TA_LEFT, fontSize=14, leading=15))
             styles.add(ParagraphStyle(
-                name='line_label', font='Helvetica-Bold', fontSize=7, leading=6, alignment=TA_LEFT))
+                name='line_label', font='Helvetica-Bold', fontSize=7,
+                leading=6, alignment=TA_LEFT))
             styles.add(ParagraphStyle(
                 name='line_label_center',
                 font='Helvetica-Bold', fontSize=7, alignment=TA_CENTER))

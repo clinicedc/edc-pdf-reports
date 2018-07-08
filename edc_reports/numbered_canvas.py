@@ -36,5 +36,5 @@ class NumberedCanvas(canvas.Canvas):
         timestamp = 'printed on {}'.format(
             timezone.now().strftime('%Y-%m-%d %H:%M'))
         self.drawRightString(
-            width - len(timestamp), 25, 'printed on {}'.format(timezone.now().strftime('%Y-%m-%d %H:%M')))
+            width - len(timestamp), 25, f'printed on {timestamp}')
         self.drawString(15, 25, 'revision {}'.format(Revision().revision))
