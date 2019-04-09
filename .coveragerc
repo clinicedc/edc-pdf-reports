@@ -1,0 +1,4 @@
+[run]
+include = edc_reports/*
+omit = edc_reports/tests/*,edc_reports/migrations/*
+branch = 1
