@@ -24,7 +24,9 @@ class Report:
         pagesize=A4,
     )
 
-    def __init__(self, page=None, header_line=None, filename=None, request=None, **kwargs):
+    def __init__(
+        self, page=None, header_line=None, filename=None, request=None, **kwargs
+    ):
         self._styles = None
         self.request = request
         self.page = page or self.default_page
@@ -32,8 +34,7 @@ class Report:
         self.report_filename = filename or f"{uuid4()}.pdf"
 
         if not header_line:
-            header_line = django_apps.get_app_config(
-                "edc_protocol").institution
+            header_line = django_apps.get_app_config("edc_protocol").institution
         self.header_line = header_line
 
     def get_report_story(self, **kwargs):
@@ -85,10 +86,8 @@ class Report:
     def styles(self):
         if not self._styles:
             styles = getSampleStyleSheet()
-            styles.add(ParagraphStyle(name="header",
-                                      fontSize=6, alignment=TA_CENTER))
-            styles.add(ParagraphStyle(name="footer",
-                                      fontSize=6, alignment=TA_RIGHT))
+            styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
+            styles.add(ParagraphStyle(name="footer", fontSize=6, alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="center", alignment=TA_CENTER))
             styles.add(ParagraphStyle(name="Right", alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="left", alignment=TA_LEFT))

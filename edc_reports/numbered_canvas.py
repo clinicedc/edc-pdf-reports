@@ -26,15 +26,12 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_number(self, page_count):
         styles = getSampleStyleSheet()
-        styles.add(ParagraphStyle(name="header",
-                                  fontSize=6, alignment=TA_CENTER))
+        styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
         width, _ = A4
         self.setFont("Helvetica", 6)
         self.drawCentredString(
             width / 2, 25, "Page %d of %d" % (self.getPageNumber(), page_count)
         )
-        timestamp = "printed on {}".format(
-            timezone.now().strftime("%Y-%m-%d %H:%M"))
-        self.drawRightString(width - len(timestamp), 25,
-                             f"printed on {timestamp}")
+        timestamp = "printed on {}".format(timezone.now().strftime("%Y-%m-%d %H:%M"))
+        self.drawRightString(width - len(timestamp), 25, f"printed on {timestamp}")
         self.drawString(15, 25, "revision {}".format(Revision().revision))
