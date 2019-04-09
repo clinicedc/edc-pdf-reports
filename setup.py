@@ -25,7 +25,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     keywords='django Edc reportlab',
-    install_requires=['reportlab', 'django-revision'],
+    install_requires=['reportlab', 'django-revision', 'edc-protocol'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -33,7 +33,6 @@ setup(
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
