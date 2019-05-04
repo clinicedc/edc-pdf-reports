@@ -2,10 +2,11 @@ from django.apps import apps as django_apps
 from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
+from django_revision.revision import Revision
 from io import BytesIO
 from reportlab.lib.enums import TA_RIGHT, TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle, _baseFontNameB
 from reportlab.lib.units import cm
 from reportlab.platypus import Paragraph
 from reportlab.platypus import SimpleDocTemplate
@@ -15,6 +16,8 @@ from .numbered_canvas import NumberedCanvas
 
 
 class Report:
+
+    document_template = SimpleDocTemplate
 
     default_page = dict(
         rightMargin=0.5 * cm,
@@ -34,11 +37,31 @@ class Report:
         self.report_filename = filename or f"{uuid4()}.pdf"
 
         if not header_line:
-            header_line = django_apps.get_app_config("edc_protocol").institution
+            header_line = django_apps.get_app_config(
+                "edc_protocol").institution
         self.header_line = header_line
 
     def get_report_story(self, **kwargs):
         return []
+
+    def draw_footer(self, canvas, doc):
+        styles = getSampleStyleSheet()
+        styles.add(ParagraphStyle(name="header",
+                                  fontSize=6, alignment=TA_CENTER))
+        width, _ = A4
+        canvas.setFont("Helvetica", 6)
+        timestamp = timezone.now().strftime("%Y-%m-%d %H:%M")
+        canvas.drawRightString(width - len(timestamp) - 20, 25,
+                               f"printed on {timestamp}")
+        canvas.drawString(35, 25, "revision {}".format(Revision().tag))
+
+    def on_first_pages(self, canvas, doc):
+        "Callback for onFirstPage"
+        self.draw_footer(canvas, doc)
+
+    def on_later_pages(self, canvas, doc):
+        "Callback for onLaterPages"
+        self.draw_footer(canvas, doc)
 
     def render(self, message_user=None, **kwargs):
         message_user = True if message_user is None else message_user
@@ -49,11 +72,14 @@ class Report:
 
         buffer = BytesIO()
 
-        document_template = SimpleDocTemplate(buffer, **self.page)
+        document_template = self.document_template(buffer, **self.page)
 
         story = self.get_report_story(**kwargs)
 
-        document_template.build(story, canvasmaker=NumberedCanvas)
+        document_template.build(
+            story, onFirstPage=self.on_first_pages,
+            onLaterPages=self.on_later_pages,
+            canvasmaker=NumberedCanvas)
 
         pdf = buffer.getvalue()
         buffer.close()
@@ -86,8 +112,10 @@ class Report:
     def styles(self):
         if not self._styles:
             styles = getSampleStyleSheet()
-            styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
-            styles.add(ParagraphStyle(name="footer", fontSize=6, alignment=TA_RIGHT))
+            styles.add(ParagraphStyle(name="header",
+                                      fontSize=6, alignment=TA_CENTER))
+            styles.add(ParagraphStyle(name="footer",
+                                      fontSize=6, alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="center", alignment=TA_CENTER))
             styles.add(ParagraphStyle(name="Right", alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="left", alignment=TA_LEFT))
@@ -107,6 +135,17 @@ class Report:
                     alignment=TA_CENTER,
                     fontSize=7,
                     leading=8,
+                )
+            )
+            styles.add(
+                ParagraphStyle(
+                    name="line_data_medium", alignment=TA_LEFT, fontSize=10, leading=11
+                )
+            )
+            styles.add(
+                ParagraphStyle(
+                    name="line_data_mediumB", alignment=TA_LEFT, fontSize=10, leading=11,
+                    fontName=_baseFontNameB,
                 )
             )
             styles.add(
