@@ -27,8 +27,7 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_number(self, page_count):
         styles = getSampleStyleSheet()
-        styles.add(ParagraphStyle(name="header",
-                                  fontSize=6, alignment=TA_CENTER))
+        styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
         width, _ = A4
         self.setFont("Helvetica", 6)
         self.drawCentredString(

@@ -51,11 +51,12 @@ class Report:
         width, _ = A4
         canvas.setFont("Helvetica", 6)
         timestamp = timezone.now().strftime("%Y-%m-%d %H:%M")
-        canvas.drawRightString(width - len(timestamp) - 20, 25,
-                               f"printed on {timestamp}")
-        canvas.drawString(35, 25, "revision {}".format(Revision().tag))
+        canvas.drawRightString(
+            width - len(timestamp) - 20, 25, f"printed on {timestamp}"
+        )
+        canvas.drawString(35, 25, f"clinicedc {Revision().tag}")
 
-    def on_first_pages(self, canvas, doc):
+    def on_first_page(self, canvas, doc):
         "Callback for onFirstPage"
         self.draw_footer(canvas, doc)
 
@@ -77,9 +78,11 @@ class Report:
         story = self.get_report_story(**kwargs)
 
         document_template.build(
-            story, onFirstPage=self.on_first_pages,
+            story,
+            onFirstPage=self.on_first_page,
             onLaterPages=self.on_later_pages,
-            canvasmaker=NumberedCanvas)
+            canvasmaker=NumberedCanvas,
+        )
 
         pdf = buffer.getvalue()
         buffer.close()
@@ -112,6 +115,8 @@ class Report:
     def styles(self):
         if not self._styles:
             styles = getSampleStyleSheet()
+            styles.add(ParagraphStyle(name="titleR",
+                                      fontSize=8, alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="header",
                                       fontSize=6, alignment=TA_CENTER))
             styles.add(ParagraphStyle(name="footer",
@@ -144,7 +149,10 @@ class Report:
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_mediumB", alignment=TA_LEFT, fontSize=10, leading=11,
+                    name="line_data_mediumB",
+                    alignment=TA_LEFT,
+                    fontSize=10,
+                    leading=11,
                     fontName=_baseFontNameB,
                 )
             )
