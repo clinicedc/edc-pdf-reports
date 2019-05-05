@@ -7,10 +7,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
-from reportlab.platypus import TableStyle
+from reportlab.platypus import TableStyle, Paragraph
 
 from .report import Report
-from reportlab.platypus.para import Paragraph
 
 
 class CrfPdfReport(Report):
@@ -23,10 +22,9 @@ class CrfPdfReport(Report):
         pagesize=A4,
     )
 
-    confidential = True
-
-    logo = os.path.join(settings.STATIC_ROOT,
-                        "edc_reports", "clinicedc_logo.jpg"),
+    logo = os.path.join(
+        settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
+        "edc_reports", "clinicedc_logo.jpg"),
     logo_dim = {"first_page": (0.83 * cm, 0.83 * cm),
                 "later_pages": (0.625 * cm, 0.625 * cm)}
 
