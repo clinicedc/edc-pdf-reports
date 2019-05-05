@@ -2,10 +2,11 @@ from django.apps import apps as django_apps
 from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
+from django_revision.revision import Revision
 from io import BytesIO
 from reportlab.lib.enums import TA_RIGHT, TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle, _baseFontNameB
 from reportlab.lib.units import cm
 from reportlab.platypus import Paragraph
 from reportlab.platypus import SimpleDocTemplate
@@ -15,6 +16,8 @@ from .numbered_canvas import NumberedCanvas
 
 
 class Report:
+
+    document_template = SimpleDocTemplate
 
     default_page = dict(
         rightMargin=0.5 * cm,
@@ -40,6 +43,25 @@ class Report:
     def get_report_story(self, **kwargs):
         return []
 
+    def draw_footer(self, canvas, doc):
+        styles = getSampleStyleSheet()
+        styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
+        width, _ = A4
+        canvas.setFont("Helvetica", 6)
+        timestamp = timezone.now().strftime("%Y-%m-%d %H:%M")
+        canvas.drawRightString(
+            width - len(timestamp) - 20, 25, f"printed on {timestamp}"
+        )
+        canvas.drawString(35, 25, f"clinicedc {Revision().tag}")
+
+    def on_first_page(self, canvas, doc):
+        "Callback for onFirstPage"
+        self.draw_footer(canvas, doc)
+
+    def on_later_pages(self, canvas, doc):
+        "Callback for onLaterPages"
+        self.draw_footer(canvas, doc)
+
     def render(self, message_user=None, **kwargs):
         message_user = True if message_user is None else message_user
         response = HttpResponse(content_type="application/pdf")
@@ -49,11 +71,16 @@ class Report:
 
         buffer = BytesIO()
 
-        document_template = SimpleDocTemplate(buffer, **self.page)
+        document_template = self.document_template(buffer, **self.page)
 
         story = self.get_report_story(**kwargs)
 
-        document_template.build(story, canvasmaker=NumberedCanvas)
+        document_template.build(
+            story,
+            onFirstPage=self.on_first_page,
+            onLaterPages=self.on_later_pages,
+            canvasmaker=NumberedCanvas,
+        )
 
         pdf = buffer.getvalue()
         buffer.close()
@@ -86,6 +113,7 @@ class Report:
     def styles(self):
         if not self._styles:
             styles = getSampleStyleSheet()
+            styles.add(ParagraphStyle(name="titleR", fontSize=8, alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
             styles.add(ParagraphStyle(name="footer", fontSize=6, alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="center", alignment=TA_CENTER))
@@ -93,12 +121,12 @@ class Report:
             styles.add(ParagraphStyle(name="left", alignment=TA_LEFT))
             styles.add(
                 ParagraphStyle(
-                    name="line_data", alignment=TA_LEFT, fontSize=8, leading=7
+                    name="line_data", alignment=TA_LEFT, fontSize=8, leading=10
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_small", alignment=TA_LEFT, fontSize=7, leading=8
+                    name="line_data_small", alignment=TA_LEFT, fontSize=7, leading=9
                 )
             )
             styles.add(
@@ -111,12 +139,26 @@ class Report:
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_large", alignment=TA_LEFT, fontSize=12, leading=12
+                    name="line_data_medium", alignment=TA_LEFT, fontSize=10, leading=12
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_largest", alignment=TA_LEFT, fontSize=14, leading=15
+                    name="line_data_mediumB",
+                    alignment=TA_LEFT,
+                    fontSize=10,
+                    leading=11,
+                    fontName=_baseFontNameB,
+                )
+            )
+            styles.add(
+                ParagraphStyle(
+                    name="line_data_large", alignment=TA_LEFT, fontSize=11, leading=14
+                )
+            )
+            styles.add(
+                ParagraphStyle(
+                    name="line_data_largest", alignment=TA_LEFT, fontSize=14, leading=18
                 )
             )
             styles.add(
