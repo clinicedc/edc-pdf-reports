@@ -22,6 +22,8 @@ class CrfPdfReport(Report):
         pagesize=A4,
     )
 
+    confidential = True
+
     logo = os.path.join(
         settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
         "edc_reports", "clinicedc_logo.jpg"),
