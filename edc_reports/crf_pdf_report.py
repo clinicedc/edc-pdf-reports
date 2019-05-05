@@ -10,12 +10,14 @@ from reportlab.lib.units import cm
 from reportlab.platypus import TableStyle, Paragraph
 
 from .report import Report
+from reportlab.platypus.tables import Table
+from reportlab.platypus.flowables import Spacer
 
 
 class CrfPdfReport(Report):
 
     default_page = dict(
-        rightMargin=1.0 * cm,
+        rightMargin=1.5 * cm,
         leftMargin=1.5 * cm,
         topMargin=2.0 * cm,
         bottomMargin=1.5 * cm,
@@ -24,11 +26,17 @@ class CrfPdfReport(Report):
 
     confidential = True
 
-    logo = os.path.join(
-        settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
-        "edc_reports", "clinicedc_logo.jpg"),
-    logo_dim = {"first_page": (0.83 * cm, 0.83 * cm),
-                "later_pages": (0.625 * cm, 0.625 * cm)}
+    logo = (
+        os.path.join(
+            settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
+            "edc_reports",
+            "clinicedc_logo.jpg",
+        ),
+    )
+    logo_dim = {
+        "first_page": (0.83 * cm, 0.83 * cm),
+        "later_pages": (0.625 * cm, 0.625 * cm),
+    }
 
     model_attr = "object"
 
@@ -44,14 +52,12 @@ class CrfPdfReport(Report):
         return f"{verbose_name} FOR {subject_identifier}"
 
     def draw_end_of_report(self, story):
-        story.append(Paragraph(f"- End of report -",
-                               self.styles["line_label_center"]))
+        story.append(Paragraph(f"- End of report -", self.styles["line_label_center"]))
 
     def get_user(self, obj, field=None):
         field = field or "user_created"
         try:
-            user = self.user_model_cls.objects.get(
-                username=getattr(obj, field))
+            user = self.user_model_cls.objects.get(username=getattr(obj, field))
         except ObjectDoesNotExist:
             user_created = getattr(obj, field)
         else:
@@ -61,13 +67,11 @@ class CrfPdfReport(Report):
     def on_first_page(self, canvas, doc):
         super().on_first_page(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 50,
-                         *self.logo_dim["first_page"])
+        canvas.drawImage(self.logo, 35, height - 50, *self.logo_dim["first_page"])
 
         if self.confidential:
             canvas.setFont("Helvetica", 10)
-            canvas.drawRightString(
-                width - 35, height - 50, "CONFIDENTIAL")
+            canvas.drawRightString(width - 35, height - 50, "CONFIDENTIAL")
 
         canvas.setFont("Helvetica", 10)
         canvas.drawRightString(width - 35, height - 40, self.title)
@@ -75,12 +79,10 @@ class CrfPdfReport(Report):
     def on_later_pages(self, canvas, doc):
         super().on_later_pages(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 40,
-                         *self.logo_dim["later_pages"])
+        canvas.drawImage(self.logo, 35, height - 40, *self.logo_dim["later_pages"])
         if self.confidential:
             canvas.setFont("Helvetica", 10)
-            canvas.drawRightString(
-                width - 35, height - 45, "CONFIDENTIAL")
+            canvas.drawRightString(width - 35, height - 45, "CONFIDENTIAL")
         if self.title:
             canvas.setFont("Helvetica", 8)
             canvas.drawRightString(width - 35, height - 35, self.title)
@@ -98,7 +100,7 @@ class CrfPdfReport(Report):
         return t
 
     def history_change_message(self, obj):
-        LogEntry = django_apps.get_model('admin.logentry')
+        LogEntry = django_apps.get_model("admin.logentry")
         log_entry = (
             LogEntry.objects.filter(
                 action_time__gte=obj.modified, object_id=str(obj.id)
@@ -110,3 +112,12 @@ class CrfPdfReport(Report):
             return log_entry.get_change_message()
         except AttributeError:
             return None
+
+    def draw_narrative(self, story, title=None, text=None):
+        t = Table([[title]], (18 * cm))
+        self.set_table_style(t, bg_cmd=self.bg_cmd)
+        story.append(t)
+        story.append(Spacer(0.1 * cm, 0.5 * cm))
+        p = Paragraph(text, self.styles["line_data_large"])
+        p.hAlign = "LEFT"
+        story.append(p)

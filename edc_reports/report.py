@@ -37,8 +37,7 @@ class Report:
         self.report_filename = filename or f"{uuid4()}.pdf"
 
         if not header_line:
-            header_line = django_apps.get_app_config(
-                "edc_protocol").institution
+            header_line = django_apps.get_app_config("edc_protocol").institution
         self.header_line = header_line
 
     def get_report_story(self, **kwargs):
@@ -46,8 +45,7 @@ class Report:
 
     def draw_footer(self, canvas, doc):
         styles = getSampleStyleSheet()
-        styles.add(ParagraphStyle(name="header",
-                                  fontSize=6, alignment=TA_CENTER))
+        styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
         width, _ = A4
         canvas.setFont("Helvetica", 6)
         timestamp = timezone.now().strftime("%Y-%m-%d %H:%M")
@@ -115,23 +113,20 @@ class Report:
     def styles(self):
         if not self._styles:
             styles = getSampleStyleSheet()
-            styles.add(ParagraphStyle(name="titleR",
-                                      fontSize=8, alignment=TA_RIGHT))
-            styles.add(ParagraphStyle(name="header",
-                                      fontSize=6, alignment=TA_CENTER))
-            styles.add(ParagraphStyle(name="footer",
-                                      fontSize=6, alignment=TA_RIGHT))
+            styles.add(ParagraphStyle(name="titleR", fontSize=8, alignment=TA_RIGHT))
+            styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
+            styles.add(ParagraphStyle(name="footer", fontSize=6, alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="center", alignment=TA_CENTER))
             styles.add(ParagraphStyle(name="Right", alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="left", alignment=TA_LEFT))
             styles.add(
                 ParagraphStyle(
-                    name="line_data", alignment=TA_LEFT, fontSize=8, leading=7
+                    name="line_data", alignment=TA_LEFT, fontSize=8, leading=10
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_small", alignment=TA_LEFT, fontSize=7, leading=8
+                    name="line_data_small", alignment=TA_LEFT, fontSize=7, leading=9
                 )
             )
             styles.add(
@@ -144,7 +139,7 @@ class Report:
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_medium", alignment=TA_LEFT, fontSize=10, leading=11
+                    name="line_data_medium", alignment=TA_LEFT, fontSize=10, leading=12
                 )
             )
             styles.add(
@@ -158,12 +153,12 @@ class Report:
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_large", alignment=TA_LEFT, fontSize=12, leading=12
+                    name="line_data_large", alignment=TA_LEFT, fontSize=11, leading=14
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_data_largest", alignment=TA_LEFT, fontSize=14, leading=15
+                    name="line_data_largest", alignment=TA_LEFT, fontSize=14, leading=18
                 )
             )
             styles.add(
