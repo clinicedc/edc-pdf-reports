@@ -11,7 +11,7 @@ from reportlab.platypus import TableStyle, Paragraph
 
 from .report import Report
 from reportlab.platypus.tables import Table
-from reportlab.platypus.flowables import Spacer
+from reportlab.platypus.flowables import Spacer, KeepTogether
 
 
 class CrfPdfReport(Report):
@@ -116,8 +116,6 @@ class CrfPdfReport(Report):
     def draw_narrative(self, story, title=None, text=None):
         t = Table([[title]], (18 * cm))
         self.set_table_style(t, bg_cmd=self.bg_cmd)
-        story.append(t)
-        story.append(Spacer(0.1 * cm, 0.5 * cm))
         p = Paragraph(text, self.styles["line_data_large"])
         p.hAlign = "LEFT"
-        story.append(p)
+        story.append(KeepTogether([t, Spacer(0.1 * cm, 0.5 * cm), p]))
