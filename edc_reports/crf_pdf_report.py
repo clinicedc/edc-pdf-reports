@@ -26,13 +26,6 @@ class CrfPdfReport(Report):
 
     confidential = True
 
-    logo = (
-        os.path.join(
-            settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
-            "edc_reports",
-            "clinicedc_logo.jpg",
-        ),
-    )
     logo_dim = {
         "first_page": (0.83 * cm, 0.83 * cm),
         "later_pages": (0.625 * cm, 0.625 * cm),
@@ -46,18 +39,28 @@ class CrfPdfReport(Report):
         self.bg_cmd = ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey)
 
     @property
+    def logo(self):
+        return os.path.join(
+            settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
+            "edc_reports",
+            "clinicedc_logo.jpg",
+        )
+
+    @property
     def title(self):
         verbose_name = getattr(self, self.model_attr).verbose_name.upper()
         subject_identifier = getattr(self, self.model_attr).subject_identifier
         return f"{verbose_name} FOR {subject_identifier}"
 
     def draw_end_of_report(self, story):
-        story.append(Paragraph(f"- End of report -", self.styles["line_label_center"]))
+        story.append(Paragraph(f"- End of report -",
+                               self.styles["line_label_center"]))
 
     def get_user(self, obj, field=None):
         field = field or "user_created"
         try:
-            user = self.user_model_cls.objects.get(username=getattr(obj, field))
+            user = self.user_model_cls.objects.get(
+                username=getattr(obj, field))
         except ObjectDoesNotExist:
             user_created = getattr(obj, field)
         else:
@@ -67,7 +70,8 @@ class CrfPdfReport(Report):
     def on_first_page(self, canvas, doc):
         super().on_first_page(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 50, *self.logo_dim["first_page"])
+        canvas.drawImage(self.logo, 35, height - 50,
+                         *self.logo_dim["first_page"])
 
         if self.confidential:
             canvas.setFont("Helvetica", 10)
@@ -79,7 +83,8 @@ class CrfPdfReport(Report):
     def on_later_pages(self, canvas, doc):
         super().on_later_pages(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 40, *self.logo_dim["later_pages"])
+        canvas.drawImage(self.logo, 35, height - 40,
+                         *self.logo_dim["later_pages"])
         if self.confidential:
             canvas.setFont("Helvetica", 10)
             canvas.drawRightString(width - 35, height - 45, "CONFIDENTIAL")
