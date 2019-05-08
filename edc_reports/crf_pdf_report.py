@@ -116,7 +116,7 @@ class CrfPdfReport(Report):
         try:
             return log_entry.get_change_message()
         except AttributeError:
-            return None
+            return "--"
 
     def draw_narrative(self, story, title=None, text=None):
         t = Table([[title]], (18 * cm))
