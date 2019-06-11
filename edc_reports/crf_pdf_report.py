@@ -44,7 +44,8 @@ class CrfPdfReport(Report):
     def logo(self):
         if not self._logo:
             path = get_static_file(
-                self.logo_data["app_label"], self.logo_data["filename"])
+                self.logo_data["app_label"], self.logo_data["filename"]
+            )
             self._logo = ImageReader(path)
         return self._logo
 
@@ -55,14 +56,12 @@ class CrfPdfReport(Report):
         return f"{verbose_name} FOR {subject_identifier}"
 
     def draw_end_of_report(self, story):
-        story.append(Paragraph(f"- End of report -",
-                               self.styles["line_label_center"]))
+        story.append(Paragraph(f"- End of report -", self.styles["line_label_center"]))
 
     def get_user(self, obj, field=None):
         field = field or "user_created"
         try:
-            user = self.user_model_cls.objects.get(
-                username=getattr(obj, field))
+            user = self.user_model_cls.objects.get(username=getattr(obj, field))
         except ObjectDoesNotExist:
             user_created = getattr(obj, field)
         else:
@@ -72,9 +71,9 @@ class CrfPdfReport(Report):
     def on_first_page(self, canvas, doc):
         super().on_first_page(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 50,
-                         *self.logo_data["first_page"],
-                         mask="auto")
+        canvas.drawImage(
+            self.logo, 35, height - 50, *self.logo_data["first_page"], mask="auto"
+        )
         if self.confidential:
             canvas.setFont("Helvetica", 10)
             canvas.drawRightString(width - 35, height - 50, "CONFIDENTIAL")
@@ -85,9 +84,9 @@ class CrfPdfReport(Report):
     def on_later_pages(self, canvas, doc):
         super().on_later_pages(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 40, *
-                         self.logo_data["later_pages"],
-                         mask="auto")
+        canvas.drawImage(
+            self.logo, 35, height - 40, *self.logo_data["later_pages"], mask="auto"
+        )
         if self.confidential:
             canvas.setFont("Helvetica", 10)
             canvas.drawRightString(width - 35, height - 45, "CONFIDENTIAL")
