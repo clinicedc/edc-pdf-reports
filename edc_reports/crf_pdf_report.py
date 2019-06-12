@@ -1,13 +1,12 @@
-import os
-
 from django.apps import apps as django_apps
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from edc_utils import get_static_file
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.platypus import TableStyle, Paragraph
+from reportlab.lib.utils import ImageReader
 
 from .report import Report
 from reportlab.platypus.tables import Table
@@ -26,7 +25,9 @@ class CrfPdfReport(Report):
 
     confidential = True
 
-    logo_dim = {
+    logo_data = {
+        "app_label": "edc_reports",
+        "filename": "clinicedc_logo.jpg",
         "first_page": (0.83 * cm, 0.83 * cm),
         "later_pages": (0.625 * cm, 0.625 * cm),
     }
@@ -34,17 +35,19 @@ class CrfPdfReport(Report):
     model_attr = "object"
 
     def __init__(self, **kwargs):
+        self._logo = None
         super().__init__(**kwargs)
         self.user_model_cls = get_user_model()
         self.bg_cmd = ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey)
 
     @property
     def logo(self):
-        return os.path.join(
-            settings.STATIC_ROOT or os.path.dirname(os.path.abspath(__file__)),
-            "edc_reports",
-            "clinicedc_logo.jpg",
-        )
+        if not self._logo:
+            path = get_static_file(
+                self.logo_data["app_label"], self.logo_data["filename"]
+            )
+            self._logo = ImageReader(path)
+        return self._logo
 
     @property
     def title(self):
@@ -53,14 +56,12 @@ class CrfPdfReport(Report):
         return f"{verbose_name} FOR {subject_identifier}"
 
     def draw_end_of_report(self, story):
-        story.append(Paragraph(f"- End of report -",
-                               self.styles["line_label_center"]))
+        story.append(Paragraph(f"- End of report -", self.styles["line_label_center"]))
 
     def get_user(self, obj, field=None):
         field = field or "user_created"
         try:
-            user = self.user_model_cls.objects.get(
-                username=getattr(obj, field))
+            user = self.user_model_cls.objects.get(username=getattr(obj, field))
         except ObjectDoesNotExist:
             user_created = getattr(obj, field)
         else:
@@ -70,9 +71,9 @@ class CrfPdfReport(Report):
     def on_first_page(self, canvas, doc):
         super().on_first_page(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 50,
-                         *self.logo_dim["first_page"])
-
+        canvas.drawImage(
+            self.logo, 35, height - 50, *self.logo_data["first_page"], mask="auto"
+        )
         if self.confidential:
             canvas.setFont("Helvetica", 10)
             canvas.drawRightString(width - 35, height - 50, "CONFIDENTIAL")
@@ -83,8 +84,9 @@ class CrfPdfReport(Report):
     def on_later_pages(self, canvas, doc):
         super().on_later_pages(canvas, doc)
         width, height = A4
-        canvas.drawImage(self.logo, 35, height - 40,
-                         *self.logo_dim["later_pages"])
+        canvas.drawImage(
+            self.logo, 35, height - 40, *self.logo_data["later_pages"], mask="auto"
+        )
         if self.confidential:
             canvas.setFont("Helvetica", 10)
             canvas.drawRightString(width - 35, height - 45, "CONFIDENTIAL")
