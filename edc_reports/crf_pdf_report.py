@@ -1,3 +1,5 @@
+import os
+
 from django.apps import apps as django_apps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,10 +9,9 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.platypus import TableStyle, Paragraph
 from reportlab.lib.utils import ImageReader
-
-from .report import Report
 from reportlab.platypus.tables import Table
 from reportlab.platypus.flowables import Spacer, KeepTogether
+from .report import Report
 
 
 class CrfPdfReport(Report):
@@ -46,7 +47,8 @@ class CrfPdfReport(Report):
             path = get_static_file(
                 self.logo_data["app_label"], self.logo_data["filename"]
             )
-            self._logo = ImageReader(path)
+            if os.path.isfile(path):
+                self._logo = ImageReader(path)
         return self._logo
 
     @property
