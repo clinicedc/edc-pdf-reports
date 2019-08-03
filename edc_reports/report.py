@@ -94,6 +94,7 @@ class Report:
             self.request,
             f"The report has been exported as a PDF. See downloads in your browser. "
             f"The filename is '{self.report_filename}'.",
+            fail_silently=True,
         )
 
     def header_footer(self, canvas, doc):
