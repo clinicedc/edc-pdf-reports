@@ -47,7 +47,7 @@ class Report:
         styles = getSampleStyleSheet()
         styles.add(ParagraphStyle(name="header", fontSize=6, alignment=TA_CENTER))
         width, _ = A4
-        canvas.setFont("Helvetica", 6)
+        canvas.setFontSize(6)
         timestamp = timezone.now().strftime("%Y-%m-%d %H:%M")
         canvas.drawRightString(
             width - len(timestamp) - 20, 25, f"printed on {timestamp}"
@@ -63,6 +63,7 @@ class Report:
         self.draw_footer(canvas, doc)
 
     def render(self, message_user=None, **kwargs):
+
         message_user = True if message_user is None else message_user
         response = HttpResponse(content_type="application/pdf")
         response[
@@ -164,37 +165,22 @@ class Report:
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_label",
-                    font="Helvetica-Bold",
-                    fontSize=7,
-                    leading=6,
-                    alignment=TA_LEFT,
+                    name="line_label", fontSize=7, leading=6, alignment=TA_LEFT
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="line_label_center",
-                    font="Helvetica-Bold",
-                    fontSize=7,
-                    alignment=TA_CENTER,
+                    name="line_label_center", fontSize=7, alignment=TA_CENTER
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="row_header",
-                    font="Helvetica-Bold",
-                    fontSize=8,
-                    leading=8,
-                    alignment=TA_CENTER,
+                    name="row_header", fontSize=8, leading=8, alignment=TA_CENTER
                 )
             )
             styles.add(
                 ParagraphStyle(
-                    name="row_data",
-                    font="Helvetica",
-                    fontSize=7,
-                    leading=7,
-                    alignment=TA_CENTER,
+                    name="row_data", fontSize=7, leading=7, alignment=TA_CENTER
                 )
             )
             self._styles = styles

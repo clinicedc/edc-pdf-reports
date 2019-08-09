@@ -25,6 +25,7 @@ class CrfPdfReport(Report):
     )
 
     confidential = True
+    draw_logo = True
 
     logo_data = {
         "app_label": "edc_reports",
@@ -73,14 +74,15 @@ class CrfPdfReport(Report):
     def on_first_page(self, canvas, doc):
         super().on_first_page(canvas, doc)
         width, height = A4
-        canvas.drawImage(
-            self.logo, 35, height - 50, *self.logo_data["first_page"], mask="auto"
-        )
+        if self.draw_logo:
+            canvas.drawImage(
+                self.logo, 35, height - 50, *self.logo_data["first_page"], mask="auto"
+            )
         if self.confidential:
-            canvas.setFont("Helvetica", 10)
+            canvas.setFontSize(10)
             canvas.drawRightString(width - 35, height - 50, "CONFIDENTIAL")
 
-        canvas.setFont("Helvetica", 10)
+        canvas.setFontSize(10)
         canvas.drawRightString(width - 35, height - 40, self.title)
 
     def on_later_pages(self, canvas, doc):
@@ -90,10 +92,10 @@ class CrfPdfReport(Report):
             self.logo, 35, height - 40, *self.logo_data["later_pages"], mask="auto"
         )
         if self.confidential:
-            canvas.setFont("Helvetica", 10)
+            canvas.setFontSize(10)
             canvas.drawRightString(width - 35, height - 45, "CONFIDENTIAL")
         if self.title:
-            canvas.setFont("Helvetica", 8)
+            canvas.setFontSize(8)
             canvas.drawRightString(width - 35, height - 35, self.title)
 
     def set_table_style(self, t, bg_cmd=None):
