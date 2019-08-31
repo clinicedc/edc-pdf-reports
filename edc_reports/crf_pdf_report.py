@@ -3,7 +3,7 @@ import os
 from django.apps import apps as django_apps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from edc_utils import get_static_file
+from edc_utils import get_static_file, formatted_age
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
@@ -57,6 +57,13 @@ class CrfPdfReport(Report):
         verbose_name = getattr(self, self.model_attr).verbose_name.upper()
         subject_identifier = getattr(self, self.model_attr).subject_identifier
         return f"{verbose_name} FOR {subject_identifier}"
+
+    @property
+    def age(self):
+        model_obj = getattr(self, self.model_attr)
+        return formatted_age(
+            self.registered_subject.dob, reference_dt=model_obj.report_datetime
+        )
 
     def draw_end_of_report(self, story):
         story.append(Paragraph(f"- End of report -", self.styles["line_label_center"]))
