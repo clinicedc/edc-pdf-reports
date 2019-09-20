@@ -1,3 +1,4 @@
+from abc import ABC
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.http import HttpResponse
@@ -15,7 +16,7 @@ from uuid import uuid4
 from .numbered_canvas import NumberedCanvas
 
 
-class Report:
+class Report(ABC):
 
     document_template = SimpleDocTemplate
 
