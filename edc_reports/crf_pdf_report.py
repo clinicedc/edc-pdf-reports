@@ -3,7 +3,10 @@ import os
 from django.apps import apps as django_apps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from edc_data_manager.get_longitudinal_value import get_longitudinal_value
+from edc_data_manager.get_longitudinal_value import (
+    get_longitudinal_value,
+    DataDictionaryError,
+)
 from edc_permissions.constants import RANDO
 from edc_utils import get_static_file, formatted_age
 from reportlab.lib import colors
@@ -67,11 +70,14 @@ class CrfPdfReport(Report):
     def weight_at_timepoint(self):
         """Returns weight in Kgs.
         """
-        return get_longitudinal_value(
-            subject_identifier=self.subject_identifier,
-            reference_dt=self.model_obj.report_datetime,
-            **self.get_weight_model_and_field(),
-        )
+        try:
+            return get_longitudinal_value(
+                subject_identifier=self.subject_identifier,
+                reference_dt=self.model_obj.report_datetime,
+                **self.get_weight_model_and_field(),
+            )
+        except DataDictionaryError:
+            return ""
 
     def get_weight_model_and_field(self):
         return {"model": self.weight_model, "field": self.weight_field}
