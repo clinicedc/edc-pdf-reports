@@ -70,9 +70,11 @@ class CrfPdfReport(Report):
         return get_longitudinal_value(
             subject_identifier=self.subject_identifier,
             reference_dt=self.model_obj.report_datetime,
-            model=self.weight_model,
-            field=self.weight_field,
+            **self.get_weight_model_and_field(),
         )
+
+    def get_weight_model_and_field(self):
+        return {"model": self.weight_model, "field": self.weight_field}
 
     @property
     def model_obj(self):
