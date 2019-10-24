@@ -7,7 +7,7 @@ from edc_data_manager.get_longitudinal_value import (
     get_longitudinal_value,
     DataDictionaryError,
 )
-from edc_permissions.constants import RANDO
+from edc_permissions import RANDO
 from edc_utils import get_static_file, formatted_age
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
