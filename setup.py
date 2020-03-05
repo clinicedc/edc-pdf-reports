@@ -25,8 +25,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     keywords='django Edc reportlab',
-    install_requires=['reportlab', 'django-revision',
-                      'edc-protocol', 'inflect'],
+    install_requires=['reportlab', 'inflect'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

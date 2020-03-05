@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django_revision.revision import Revision
 from io import BytesIO
+
+from edc_protocol import Protocol
 from reportlab.lib.enums import TA_RIGHT, TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle, _baseFontNameB
@@ -17,7 +19,6 @@ from .numbered_canvas import NumberedCanvas
 
 
 class Report(ABC):
-
     document_template = SimpleDocTemplate
 
     default_page = dict(
@@ -38,7 +39,7 @@ class Report(ABC):
         self.report_filename = filename or f"{uuid4()}.pdf"
 
         if not header_line:
-            header_line = django_apps.get_app_config("edc_protocol").institution
+            header_line = Protocol().institution
         self.header_line = header_line
 
     def get_report_story(self, **kwargs):

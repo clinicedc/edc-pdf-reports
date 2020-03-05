@@ -30,7 +30,6 @@ class CrfPdfReportError(Exception):
 
 
 class CrfPdfReport(Report):
-
     default_page = dict(
         rightMargin=1.5 * cm,
         leftMargin=1.5 * cm,
@@ -121,10 +120,10 @@ class CrfPdfReport(Report):
                     "User does not have permissions to access randomization list. "
                     f"Got {self.request.user}"
                 )
-            RandomizationList = django_apps.get_model(
+            randomization_list_model_cls = django_apps.get_model(
                 self.registered_subject.randomization_list_model
             )
-            self._assignment = RandomizationList.objects.get(
+            self._assignment = randomization_list_model_cls.objects.get(
                 subject_identifier=self.subject_identifier
             ).get_assignment_display()
         return self._assignment
@@ -232,9 +231,9 @@ class CrfPdfReport(Report):
         return t
 
     def history_change_message(self, obj):
-        LogEntry = django_apps.get_model("admin.logentry")
+        log_entry_model_cls = django_apps.get_model("admin.logentry")
         log_entry = (
-            LogEntry.objects.filter(
+            log_entry_model_cls.objects.filter(
                 action_time__gte=obj.modified, object_id=str(obj.id)
             )
             .order_by("action_time")
