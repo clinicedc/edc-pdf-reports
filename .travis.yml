@@ -1,6 +1,5 @@
 [tox]
 envlist =
-    py37-django21
     py37-django22
     py37-djangotrunk
 
@@ -12,13 +11,16 @@ commands = sphinx-build -W -b html -d {envtmpdir}/doctrees . {envtmpdir}/html
 
 [testenv]
 passenv = TOXENV CI TRAVIS TRAVIS_* CODECOV_*
+
 setenv =
     PYTHONWARNINGS=module::DeprecationWarning
+
 commands =
   flake8 edc_reports
   pip install -U git+https://github.com/erikvw/django-simple-history@admin_revert_permissions
   coverage run runtests.py {posargs}
   codecov -e TOXENV
+
 deps =
   -rrequirements.txt
   -rrequirements.tests.txt
@@ -27,6 +29,18 @@ deps =
   coverage
   codecov>=1.4.0
   flake8
-  django21: Django>=2.1,<2.2
   django22: Django>=2.2,<2.3
   djangotrunk: https://github.com/django/django/tarball/master
+
+matrix:
+  include:
+    - python: 3.7
+      env: TOXENV=py37-django22
+    - python: 3.7
+      env: TOXENV=py37-django30
+    - python: 3.8
+      env: TOXENV=py38-django30
+    - python: 3.7
+      env: TOXENV=py37-djangotrunk
+    - python: 3.8
+      env: TOXENV=py38-djangotrunk

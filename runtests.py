@@ -9,7 +9,6 @@ from django.test.runner import DiscoverRunner
 from edc_test_utils import DefaultTestSettings
 from os.path import abspath, dirname
 
-
 app_name = 'edc_reports'
 base_dir = dirname(abspath(__file__))
 
@@ -26,6 +25,14 @@ DEFAULT_SETTINGS = DefaultTestSettings(
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'django.contrib.sites',
+        'django_crypto_fields.apps.AppConfig',
+        'django_revision.apps.AppConfig',
+        'edc_auth.apps.AppConfig',
+        'edc_sites.apps.AppConfig',
+        'edc_reference.apps.AppConfig',
+        'edc_notification.apps.AppConfig',
+        'edc_lab.apps.AppConfig',
+        'edc_randomization.apps.AppConfig',
         'edc_protocol.apps.AppConfig',
         'edc_reports.apps.AppConfig',
     ],
