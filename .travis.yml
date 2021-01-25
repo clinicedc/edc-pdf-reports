@@ -1,41 +1,33 @@
-[tox]
-envlist =
-    py37-django22
-    py37-djangotrunk
+language: python
 
-[testenv:docs]
-changedir = docs
-deps =
-    Sphinx
-commands = sphinx-build -W -b html -d {envtmpdir}/doctrees . {envtmpdir}/html
+dist: xenial
 
-[testenv]
-passenv = TOXENV CI TRAVIS TRAVIS_* CODECOV_*
+sudo: true
 
-setenv =
-    PYTHONWARNINGS=module::DeprecationWarning
+addons:
+  apt_packages:
+  - libcups2-dev
 
-commands =
-  flake8 edc_reports
-  pip install -U git+https://github.com/erikvw/django-simple-history@admin_revert_permissions2
-  coverage run runtests.py {posargs}
-  codecov -e TOXENV
+services:
+- mysql
 
-deps =
-  -rrequirements.txt
-  -rrequirements.tests.txt
-  edc-test-utils
-  faker
-  coverage
-  codecov>=1.4.0
-  flake8
-  django22: Django>=2.2,<2.3
-  djangotrunk: https://github.com/django/django/tarball/master
+install:
+- pip install --upgrade pip
+- pip install mysqlclient
+- pip install flake8 coverage codecov tox-travis
+
+before_script:
+- flake8 edc_reports
+- mysql -e 'create database edc character set utf8;'
+
+script:
+- coverage run -m tox
+
+after_success:
+- codecov
 
 matrix:
   include:
-    - python: 3.7
-      env: TOXENV=py37-django22
     - python: 3.7
       env: TOXENV=py37-django30
     - python: 3.8
