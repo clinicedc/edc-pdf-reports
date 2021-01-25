@@ -8,6 +8,7 @@ from edc_data_manager.get_longitudinal_value import (
     get_longitudinal_value,
     DataDictionaryError,
 )
+from edc_protocol import Protocol
 from edc_utils import get_static_file, formatted_age
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -125,7 +126,7 @@ class CrfPdfReport(Report):
             )
             self._assignment = randomization_list_model_cls.objects.get(
                 subject_identifier=self.subject_identifier
-            ).get_assignment_display()
+            ).assignment_description
         return self._assignment
 
     @property
@@ -145,12 +146,10 @@ class CrfPdfReport(Report):
         return f"{verbose_name} FOR {subject_identifier}"
 
     def draw_demographics(self, story, **kwargs):
-
-        assignment = "*****************"
         try:
             assignment = fill(self.assignment, width=80)
         except NotAllowed:
-            pass
+            assignment = "*****************"
         rows = [
             ["Subject:", self.subject_identifier],
             [
@@ -197,8 +196,12 @@ class CrfPdfReport(Report):
             canvas.drawImage(
                 self.logo, 35, height - 50, *self.logo_data["first_page"], mask="auto"
             )
+        else:
+            canvas.setFontSize(10)
+            canvas.drawString(48, height - 40, Protocol().protocol_name)
         if self.confidential:
             canvas.setFontSize(10)
+            canvas.drawString(48, height - 50, "CONFIDENTIAL")
             canvas.drawRightString(width - 35, height - 50, "CONFIDENTIAL")
 
         canvas.setFontSize(10)
@@ -218,7 +221,8 @@ class CrfPdfReport(Report):
             canvas.setFontSize(8)
             canvas.drawRightString(width - 35, height - 35, self.title)
 
-    def set_table_style(self, t, bg_cmd=None):
+    @staticmethod
+    def set_table_style(t, bg_cmd=None):
         cmds = [
             ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.black),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
@@ -230,7 +234,8 @@ class CrfPdfReport(Report):
         t.hAlign = "LEFT"
         return t
 
-    def history_change_message(self, obj):
+    @staticmethod
+    def history_change_message(obj):
         log_entry_model_cls = django_apps.get_model("admin.logentry")
         log_entry = (
             log_entry_model_cls.objects.filter(
