@@ -1,10 +1,10 @@
 from django.test import TestCase, tag  # noqa
-from edc_reports import Report
-from reportlab.platypus.paragraph import Paragraph
-from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib import colors
 from reportlab.lib.units import cm
+from reportlab.platypus.paragraph import Paragraph
+from reportlab.platypus.tables import Table, TableStyle
 
+from edc_reports import Report
 
 dummy_text = """
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer at purus eros.

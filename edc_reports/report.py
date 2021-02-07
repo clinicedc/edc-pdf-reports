@@ -1,19 +1,18 @@
 from abc import ABC
+from io import BytesIO
+from uuid import uuid4
+
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
 from django_revision.revision import Revision
-from io import BytesIO
-
 from edc_protocol import Protocol
-from reportlab.lib.enums import TA_RIGHT, TA_CENTER, TA_LEFT
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle, _baseFontNameB
+from reportlab.lib.styles import ParagraphStyle, _baseFontNameB, getSampleStyleSheet
 from reportlab.lib.units import cm
-from reportlab.platypus import Paragraph
-from reportlab.platypus import SimpleDocTemplate
-from uuid import uuid4
+from reportlab.platypus import Paragraph, SimpleDocTemplate
 
 from .numbered_canvas import NumberedCanvas
 
@@ -29,9 +28,7 @@ class Report(ABC):
         pagesize=A4,
     )
 
-    def __init__(
-        self, page=None, header_line=None, filename=None, request=None, **kwargs
-    ):
+    def __init__(self, page=None, header_line=None, filename=None, request=None, **kwargs):
         self._styles = None
         self.request = request
         self.page = page or self.default_page
@@ -51,9 +48,7 @@ class Report(ABC):
         width, _ = A4
         canvas.setFontSize(6)
         timestamp = timezone.now().strftime("%Y-%m-%d %H:%M")
-        canvas.drawRightString(
-            width - len(timestamp) - 20, 25, f"printed on {timestamp}"
-        )
+        canvas.drawRightString(width - len(timestamp) - 20, 25, f"printed on {timestamp}")
         canvas.drawString(35, 25, f"clinicedc {Revision().tag}")
 
     def on_first_page(self, canvas, doc):
@@ -68,9 +63,7 @@ class Report(ABC):
 
         message_user = True if message_user is None else message_user
         response = HttpResponse(content_type="application/pdf")
-        response[
-            "Content-Disposition"
-        ] = f'attachment; filename="{self.report_filename}"'
+        response["Content-Disposition"] = f'attachment; filename="{self.report_filename}"'
 
         buffer = BytesIO()
 
@@ -124,9 +117,7 @@ class Report(ABC):
             styles.add(ParagraphStyle(name="Right", alignment=TA_RIGHT))
             styles.add(ParagraphStyle(name="left", alignment=TA_LEFT))
             styles.add(
-                ParagraphStyle(
-                    name="line_data", alignment=TA_LEFT, fontSize=8, leading=10
-                )
+                ParagraphStyle(name="line_data", alignment=TA_LEFT, fontSize=8, leading=10)
             )
             styles.add(
                 ParagraphStyle(
@@ -166,24 +157,16 @@ class Report(ABC):
                 )
             )
             styles.add(
-                ParagraphStyle(
-                    name="line_label", fontSize=7, leading=6, alignment=TA_LEFT
-                )
+                ParagraphStyle(name="line_label", fontSize=7, leading=6, alignment=TA_LEFT)
             )
             styles.add(
-                ParagraphStyle(
-                    name="line_label_center", fontSize=7, alignment=TA_CENTER
-                )
+                ParagraphStyle(name="line_label_center", fontSize=7, alignment=TA_CENTER)
             )
             styles.add(
-                ParagraphStyle(
-                    name="row_header", fontSize=8, leading=8, alignment=TA_CENTER
-                )
+                ParagraphStyle(name="row_header", fontSize=8, leading=8, alignment=TA_CENTER)
             )
             styles.add(
-                ParagraphStyle(
-                    name="row_data", fontSize=7, leading=7, alignment=TA_CENTER
-                )
+                ParagraphStyle(name="row_data", fontSize=7, leading=7, alignment=TA_CENTER)
             )
             self._styles = styles
         return self._styles
