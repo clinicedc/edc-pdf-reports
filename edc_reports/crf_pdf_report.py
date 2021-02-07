@@ -1,23 +1,23 @@
 import os
+from textwrap import fill
 
 from django.apps import apps as django_apps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from edc_auth import RANDO
 from edc_data_manager.get_longitudinal_value import (
-    get_longitudinal_value,
     DataDictionaryError,
+    get_longitudinal_value,
 )
 from edc_protocol import Protocol
-from edc_utils import get_static_file, formatted_age
+from edc_utils import formatted_age, get_static_file
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
-from reportlab.platypus import TableStyle, Paragraph
 from reportlab.lib.utils import ImageReader
+from reportlab.platypus import Paragraph, TableStyle
+from reportlab.platypus.flowables import KeepTogether, Spacer
 from reportlab.platypus.tables import Table
-from reportlab.platypus.flowables import Spacer, KeepTogether
-from textwrap import fill
 
 from .report import Report
 
@@ -68,8 +68,7 @@ class CrfPdfReport(Report):
 
     @property
     def weight_at_timepoint(self):
-        """Returns weight in Kgs.
-        """
+        """Returns weight in Kgs."""
         try:
             return get_longitudinal_value(
                 subject_identifier=self.subject_identifier,
@@ -110,13 +109,9 @@ class CrfPdfReport(Report):
 
     @property
     def assignment(self):
-        """Returns the assignment from the Randomization List.
-        """
+        """Returns the assignment from the Randomization List."""
         if not self._assignment:
-            if (
-                not self.unblinded
-                or not self.request.user.groups.filter(name=RANDO).exists()
-            ):
+            if not self.unblinded or not self.request.user.groups.filter(name=RANDO).exists():
                 raise NotAllowed(
                     "User does not have permissions to access randomization list. "
                     f"Got {self.request.user}"
@@ -132,9 +127,7 @@ class CrfPdfReport(Report):
     @property
     def logo(self):
         if not self._logo:
-            path = get_static_file(
-                self.logo_data["app_label"], self.logo_data["filename"]
-            )
+            path = get_static_file(self.logo_data["app_label"], self.logo_data["filename"])
             if os.path.isfile(path):
                 self._logo = ImageReader(path)
         return self._logo
@@ -164,9 +157,7 @@ class CrfPdfReport(Report):
             ],
             [
                 "Randomization date:",
-                self.registered_subject.randomization_datetime.strftime(
-                    "%Y-%m-%d %H:%M"
-                ),
+                self.registered_subject.randomization_datetime.strftime("%Y-%m-%d %H:%M"),
             ],
             ["Assignment:", assignment],
         ]

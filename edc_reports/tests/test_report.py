@@ -1,5 +1,6 @@
-from django.test import TestCase
 from uuid import uuid4
+
+from django.test import TestCase
 
 from .my_report import MyReport
 
