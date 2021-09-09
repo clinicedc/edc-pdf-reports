@@ -4,12 +4,12 @@ from textwrap import fill
 from django.apps import apps as django_apps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from edc_auth import RANDO
 from edc_data_manager.get_longitudinal_value import (
     DataDictionaryError,
     get_longitudinal_value,
 )
 from edc_protocol import Protocol
+from edc_randomization.constants import RANDO
 from edc_utils import formatted_age, get_static_file
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
