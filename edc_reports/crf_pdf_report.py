@@ -1,6 +1,7 @@
 import os
 from textwrap import fill
 
+from bs4 import BeautifulSoup
 from django.apps import apps as django_apps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -236,7 +237,8 @@ class CrfPdfReport(Report):
             .first()
         )
         try:
-            return log_entry.get_change_message()
+            soup = BeautifulSoup(log_entry.get_change_message(), features="html.parser")
+            return soup.get_text()
         except AttributeError:
             return "--"
 
