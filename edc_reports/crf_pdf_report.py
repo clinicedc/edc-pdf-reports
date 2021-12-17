@@ -10,7 +10,7 @@ from edc_data_manager.get_longitudinal_value import (
     get_longitudinal_value,
 )
 from edc_protocol import Protocol
-from edc_randomization.constants import RANDO
+from edc_randomization.auth_objects import RANDO_UNBLINDED
 from edc_utils import formatted_age, get_static_file
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -112,7 +112,10 @@ class CrfPdfReport(Report):
     def assignment(self):
         """Returns the assignment from the Randomization List."""
         if not self._assignment:
-            if not self.unblinded or not self.request.user.groups.filter(name=RANDO).exists():
+            if (
+                not self.unblinded
+                or not self.request.user.groups.filter(name=RANDO_UNBLINDED).exists()
+            ):
                 raise NotAllowed(
                     "User does not have permissions to access randomization list. "
                     f"Got {self.request.user}"
@@ -229,13 +232,10 @@ class CrfPdfReport(Report):
     @staticmethod
     def history_change_message(obj):
         log_entry_model_cls = django_apps.get_model("admin.logentry")
-        log_entry = (
-            log_entry_model_cls.objects.filter(
-                action_time__gte=obj.modified, object_id=str(obj.id)
-            )
-            .order_by("action_time")
-            .first()
-        )
+        qs = log_entry_model_cls.objects.filter(
+            action_time__gte=obj.modified, object_id=str(obj.id)
+        ).order_by("action_time")
+        log_entry = qs.first()
         try:
             soup = BeautifulSoup(log_entry.get_change_message(), features="html.parser")
             return soup.get_text()
