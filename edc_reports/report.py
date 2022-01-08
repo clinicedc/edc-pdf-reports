@@ -2,7 +2,6 @@ from abc import ABC
 from io import BytesIO
 from uuid import uuid4
 
-from django.apps import apps as django_apps
 from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
