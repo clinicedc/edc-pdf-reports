@@ -1,20 +1,20 @@
 |pypi| |actions| |codecov| |downloads|
 
 
-edc-reports
-------------------
+edc-pdf-reports
+---------------
 
-Reportlab classes for clinicedc/edc projects
+Reportlab/PDF classes for clinicedc/edc projects
 
 
-.. |pypi| image:: https://img.shields.io/pypi/v/edc-reports.svg
-    :target: https://pypi.python.org/pypi/edc-reports
+.. |pypi| image:: https://img.shields.io/pypi/v/edc-pdf-reports.svg
+    :target: https://pypi.python.org/pypi/edc-pdf-reports
 
-.. |actions| image:: https://github.com/clinicedc/edc-reports/workflows/build/badge.svg?branch=develop
-  :target: https://github.com/clinicedc/edc-reports/actions?query=workflow:build
+.. |actions| image:: https://github.com/clinicedc/edc-pdf-reports/workflows/build/badge.svg?branch=develop
+  :target: https://github.com/clinicedc/edc-pdf-reports/actions?query=workflow:build
 
-.. |codecov| image:: https://codecov.io/gh/clinicedc/edc-reports/branch/develop/graph/badge.svg
-  :target: https://codecov.io/gh/clinicedc/edc-reports
+.. |codecov| image:: https://codecov.io/gh/clinicedc/edc-pdf-reports/branch/develop/graph/badge.svg
+  :target: https://codecov.io/gh/clinicedc/edc-pdf-reports
 
-.. |downloads| image:: https://pepy.tech/badge/edc-reports
-   :target: https://pepy.tech/project/edc-reports
+.. |downloads| image:: https://pepy.tech/badge/edc-pdf-reports
+   :target: https://pepy.tech/project/edc-pdf-reports
