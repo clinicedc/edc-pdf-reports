@@ -51,11 +51,11 @@ class Report(ABC):
         canvas.drawString(35, 25, f"clinicedc {Revision().tag}")
 
     def on_first_page(self, canvas, doc):
-        "Callback for onFirstPage"
+        """Callback for `onFirstPage`"""
         self.draw_footer(canvas, doc)
 
     def on_later_pages(self, canvas, doc):
-        "Callback for onLaterPages"
+        """Callback for onLaterPages"""
         self.draw_footer(canvas, doc)
 
     def render(self, message_user=None, **kwargs):

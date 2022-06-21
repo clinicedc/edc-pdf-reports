@@ -49,7 +49,7 @@ class CrfPdfReport(Report):
     open_label = True
 
     logo_data = {
-        "app_label": "edc_reports",
+        "app_label": "edc_pdf_reports",
         "filename": "clinicedc_logo.jpg",
         "first_page": (0.83 * cm, 0.83 * cm),
         "later_pages": (0.625 * cm, 0.625 * cm),
@@ -69,7 +69,7 @@ class CrfPdfReport(Report):
 
     @property
     def weight_at_timepoint(self):
-        """Returns weight in Kgs."""
+        """Returns weight in Kgs"""
         try:
             return get_longitudinal_value(
                 subject_identifier=self.subject_identifier,
@@ -110,7 +110,7 @@ class CrfPdfReport(Report):
 
     @property
     def assignment(self):
-        """Returns the assignment from the Randomization List."""
+        """Returns the assignment from the Randomization List"""
         if not self._assignment:
             if (
                 not self.unblinded
@@ -172,7 +172,7 @@ class CrfPdfReport(Report):
         story.append(t)
 
     def draw_end_of_report(self, story):
-        story.append(Paragraph(f"- End of report -", self.styles["line_label_center"]))
+        story.append(Paragraph("- End of report -", self.styles["line_label_center"]))
 
     def get_user(self, obj, field=None):
         field = field or "user_created"
