@@ -96,12 +96,11 @@ Add to ``settings``:
 
 Your changelist will look something like this:
 
-![ChangeList](/docs/images/changelist.png)
+|changelist|
 
 The intermediate page, linked from the changelist, will look like this:
 
-![Imtermediate page](/docs/images/intermediate_page.png)
-
+|intermediate_page|
 
 Creating a PDF file outside of the view
 =======================================
@@ -144,8 +143,11 @@ For example:
 
 
 
-.. |intermediate_page| image:: https://github.com/clinicedc/edc-pdf-reports/tree/develop/docs/intermediate_page.png
-.. |changelist| image:: https://github.com/clinicedc/edc-pdf-reports/tree/develop/docs/changelist.png
+.. |intermediate_page| image:: /docs/intermediate_page.png
+   :alt: Intermediate page
+
+.. |changelist| image:: /docs/changelist.png
+   :alt: ChangeList
 
 .. |pypi| image:: https://img.shields.io/pypi/v/edc-pdf-reports.svg
     :target: https://pypi.python.org/pypi/edc-pdf-reports
