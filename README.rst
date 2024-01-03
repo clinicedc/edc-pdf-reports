@@ -94,7 +94,7 @@ Add to ``settings``:
         ...]
 
 
-Your changelist have the column "PDF" like this:
+Your changelist will have the new column "PDF" and the print as pdf action will be available.
 
 |changelist|
 
