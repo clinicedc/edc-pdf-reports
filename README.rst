@@ -144,8 +144,8 @@ For example:
 
 
 
-.. |intermediate_page| image:: https://github.com/clinicedc/edc-pdf-reports/branch/develop/docs/intermediate_page.png
-.. |changelist| image:: https://github.com/clinicedc/edc-pdf-reports/branch/develop/docs/changelist.png
+.. |intermediate_page| image:: https://github.com/clinicedc/edc-pdf-reports/tree/develop/docs/intermediate_page.png
+.. |changelist| image:: https://github.com/clinicedc/edc-pdf-reports/tree/develop/docs/changelist.png
 
 .. |pypi| image:: https://img.shields.io/pypi/v/edc-pdf-reports.svg
     :target: https://pypi.python.org/pypi/edc-pdf-reports
