@@ -96,11 +96,11 @@ Add to ``settings``:
 
 Your changelist will look something like this:
 
-|changelist|
+![ChangeList](/docs/images/changelist.png)
 
 The intermediate page, linked from the changelist, will look like this:
 
-|intermediate_page|
+![Imtermediate page](/docs/images/intermediate_page.png)
 
 
 Creating a PDF file outside of the view
