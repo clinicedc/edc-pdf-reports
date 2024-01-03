@@ -1,3 +1,6 @@
+.env
+.etc/*
+.DS_Store
 docs/.DS_Store
 _version.py
 django_crypto_fields
