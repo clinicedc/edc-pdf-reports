@@ -102,6 +102,8 @@ The intermediate page, linked from the changelist, will look like this:
 
 |intermediate_page|
 
+Note the passphrase and click "Create File". The file will be created in the view and downloaded by the browser. 
+
 Creating a PDF file outside of the view
 =======================================
 
