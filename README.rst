@@ -117,7 +117,7 @@ For example:
     import tempfile
     from pathlib import Path
     from django.contrib.auth.models import User
-    from edc_pdf_reports.utils import write_models_to_secure_pdf, write_model_to_insecure_pdf
+    from edc_pdf_reports.utils import write_queryset_to_secure_pdf, write_model_to_insecure_pdf
     from effect_ae.models import DeathReport
 
     dir = tempfile.mkdtemp()
@@ -128,7 +128,7 @@ For example:
     # create a secure PDF file for the queryset
     q = p / "death_reports_secure.pdf"
     password = mempass.mkpassword(2)
-    buffer = write_models_to_secure_pdf(queryset=qs, password=password, user=user)
+    buffer = write_queryset_to_secure_pdf(queryset=qs, password=password, user=user)
     q.write_bytes(buffer.getbuffer())
     print(q)
 
