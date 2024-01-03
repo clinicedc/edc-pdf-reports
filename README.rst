@@ -94,7 +94,7 @@ Add to ``settings``:
         ...]
 
 
-Your changelist will look something like this:
+Your changelist have the column "PDF" like this:
 
 |changelist|
 
@@ -143,10 +143,10 @@ For example:
 
 
 
-.. |intermediate_page| image:: /docs/intermediate_page.png
+.. |intermediate_page| image:: /docs/images/intermediate_page.png
    :alt: Intermediate page
 
-.. |changelist| image:: /docs/changelist.png
+.. |changelist| image:: /docs/images/changelist.png
    :alt: ChangeList
 
 .. |pypi| image:: https://img.shields.io/pypi/v/edc-pdf-reports.svg
