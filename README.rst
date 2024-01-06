@@ -107,7 +107,7 @@ Note the passphrase and click "Create File". The file will be created in the vie
 Creating a PDF file outside of the view
 =======================================
 
-The view ``PrintPdfReportView`` uses function ``write_models_to_secure_pdf`` to create a PDF.
+The view ``PrintPdfReportView`` uses function ``write_queryset_to_secure_pdf`` to create a PDF.
 You can access this function directly.
 
 For example:
