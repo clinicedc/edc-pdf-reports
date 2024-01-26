@@ -7,7 +7,6 @@ from os.path import abspath, dirname
 import django
 from django.conf import settings
 from django.test.runner import DiscoverRunner
-from edc_constants.constants import IGNORE
 from edc_test_utils import DefaultTestSettings
 
 app_name = "edc_pdf_reports"
