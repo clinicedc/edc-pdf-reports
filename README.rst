@@ -154,8 +154,8 @@ For example:
 .. |pypi| image:: https://img.shields.io/pypi/v/edc-pdf-reports.svg
     :target: https://pypi.python.org/pypi/edc-pdf-reports
 
-.. |actions| image:: https://github.com/clinicedc/edc-pdf-reports/workflows/build/badge.svg?branch=develop
-  :target: https://github.com/clinicedc/edc-pdf-reports/actions?query=workflow:build
+.. |actions| image:: https://github.com/clinicedc/edc-pdf-reports/actions/workflows/build.yml/badge.svg
+  :target: https://github.com/clinicedc/edc-pdf-reports/actions/workflows/build.yml
 
 .. |codecov| image:: https://codecov.io/gh/clinicedc/edc-pdf-reports/branch/develop/graph/badge.svg
   :target: https://codecov.io/gh/clinicedc/edc-pdf-reports
