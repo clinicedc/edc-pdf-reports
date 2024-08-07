@@ -67,6 +67,11 @@ Declare the ModelAdmin class with ``PdfButtonModelAdminMixin``:
 
     # admin.py
 
+    @admin.action(permissions=["view"], description="Print Death Reports as PDF")
+    def print_to_pdf_action(modeladmin, request, queryset):
+        return print_selected_to_pdf_action(modeladmin, request, queryset)
+
+
     class DeathReportModelAdmin(PdfButtonModelAdminMixin, DeathReportModelAdminMixin):
         actions = [print_to_pdf_action]
         list_display = ["subject_identifier", "pdf_button", ...]
