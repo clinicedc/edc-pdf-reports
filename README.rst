@@ -28,6 +28,20 @@ For this to work, you need to:
 Your changelist will include options for printing one or many PDF reports into a
 password protected and secure PDF file.
 
+If you are using this module outside of a clinicedc/edc project, you need to update two
+``settings`` attributes:
+
+.. code-block:: python
+
+    # settings.py
+    # tells edc_pdf_reports to not import two clinicedc modules
+    EDC_PDF_REPORTS_INTEGRATE_EDC = False
+    # points
+    EDC_PDF_REPORTS_TEMPLATES = {"pdf_intermediate": "edc_pdf_reports/generic_pdf_intermediate.html"}
+
+
+
+
 DeathReport as an example
 +++++++++++++++++++++++++
 
@@ -66,6 +80,11 @@ Declare the ModelAdmin class with ``PdfButtonModelAdminMixin``:
 .. code-block:: python
 
     # admin.py
+
+    @admin.action(permissions=["view"], description="Print Death Reports as PDF")
+    def print_to_pdf_action(modeladmin, request, queryset):
+        return print_selected_to_pdf_action(modeladmin, request, queryset)
+
 
     class DeathReportModelAdmin(PdfButtonModelAdminMixin, DeathReportModelAdminMixin):
         actions = [print_to_pdf_action]
@@ -154,8 +173,8 @@ For example:
 .. |pypi| image:: https://img.shields.io/pypi/v/edc-pdf-reports.svg
     :target: https://pypi.python.org/pypi/edc-pdf-reports
 
-.. |actions| image:: https://github.com/clinicedc/edc-pdf-reports/workflows/build/badge.svg?branch=develop
-  :target: https://github.com/clinicedc/edc-pdf-reports/actions?query=workflow:build
+.. |actions| image:: https://github.com/clinicedc/edc-pdf-reports/actions/workflows/build.yml/badge.svg
+  :target: https://github.com/clinicedc/edc-pdf-reports/actions/workflows/build.yml
 
 .. |codecov| image:: https://codecov.io/gh/clinicedc/edc-pdf-reports/branch/develop/graph/badge.svg
   :target: https://codecov.io/gh/clinicedc/edc-pdf-reports
