@@ -28,6 +28,20 @@ For this to work, you need to:
 Your changelist will include options for printing one or many PDF reports into a
 password protected and secure PDF file.
 
+If you are using this module outside of a clinicedc/edc project, you need to update two
+``settings`` attributes:
+
+.. code-block:: python
+
+    # settings.py
+    # tells edc_pdf_reports to not import two clinicedc modules
+    EDC_PDF_REPORTS_INTEGRATE_EDC = False
+    # points
+    EDC_PDF_REPORTS_TEMPLATES = {"pdf_intermediate": "edc_pdf_reports/generic_pdf_intermediate.html"}
+
+
+
+
 DeathReport as an example
 +++++++++++++++++++++++++
 
