@@ -160,6 +160,17 @@ For example:
     q.write_bytes(buffer.getbuffer())
     print(q)
 
+Add watermark to report
+=======================
+
+When testing, you can add a watermark to the report. In your test settings set the following:
+
+.. code-block:: python
+
+    EDC_PDF_REPORTS_WATERMARK_WORD = "SAMPLE"
+    EDC_PDF_REPORTS_WATERMARK_FONT = ("Helvetica", 100)
+
+The watermark prints at a 45 degree rotation across the center of each page.
 
 
 
